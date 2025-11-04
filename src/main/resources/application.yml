@@ -2,6 +2,6 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/user_management
     username: root
-    password:
+    password: 123456789
   jpa:
     show-sql: true

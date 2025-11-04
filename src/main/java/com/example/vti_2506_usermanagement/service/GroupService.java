@@ -12,5 +12,5 @@ public interface GroupService {
     public Group updateGroup(Long id, GroupDTO groupDto);
     public Group deleteGroup(Long id);
     public Group getGroupById(Long id);
-    public List<Group> getGroupByGroupName(GroupFilter groupFilter);
+    public List<Group> searchGroup(GroupFilter groupFilter);
 }

@@ -14,15 +14,15 @@ import java.time.LocalDate;
 @Setter
 public class UserDTO {
     @NotBlank(message = "first name không được để trống")
-    @Size(min=4, max=20, message = "fist name phải có từ 4 đến 20 ký tự")
+    @Size(min=1, max=20, message = "fist name phải có từ 4 đến 20 ký tự")
     private String firstName;
 
     @NotBlank(message = "Lastname không được để trống")
     private String lastName;
-    @Size(min=4, max=20, message = "last name không được để trống")
+    @Size(min=1, max=20, message = "last name không được để trống")
 
     @NotBlank(message="birthday không được bỏ trống")
-    private LocalDate birthday;
+    private String  birthday;
 
     @NotBlank(message="address không được để trống")
     private String address;

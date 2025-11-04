@@ -8,9 +8,13 @@ import com.example.vti_2506_usermanagement.repository.UserRepository;
 import com.example.vti_2506_usermanagement.service.UserService;
 import com.example.vti_2506_usermanagement.specification.UserSpecification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -20,8 +24,8 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public Page<User> getAllUsers(Pageable pageable) {
+        return userRepository.findAll(pageable);
     }
 
     @Override
@@ -29,7 +33,7 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
-        user.setBirthday(userDTO.getBirthday());
+        user.setBirthday(LocalDate.parse(userDTO.getBirthday()));
         user.setAddress(userDTO.getAddress());
 
         return userRepository.save(user);
@@ -43,7 +47,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id).get();
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
-        user.setBirthday(userDTO.getBirthday());
+        user.setBirthday(LocalDate.parse(userDTO.getBirthday()));
         user.setAddress(userDTO.getAddress());
 
         return userRepository.save(user);
@@ -59,6 +63,34 @@ public class UserServiceImpl implements UserService {
         }
          userRepository.deleteById(id);
     }
+
+    @Override
+    public List<User> findbyAgeMoreThan(String age) {
+        if (age == null || age.isEmpty() || Integer.parseInt(age) < 0) {
+            throw new BusinessException("Age is invalid");
+        }
+        LocalDate localdate = LocalDate.of(LocalDate.now().minusYears(Integer.parseInt(age)).getYear(), 1, 1);
+        return userRepository.findByBirthdayBefore(localdate);
+    }
+
+    @Override
+    public List<User> finbyAgeMoreThan2(String age) {
+        if (age == null || age.isEmpty() || Integer.parseInt(age) < 0) {
+            throw new BusinessException("Age is invalid");
+        }
+        LocalDate localdate = LocalDate.of(LocalDate.now().minusYears(Integer.parseInt(age)).getYear(), 1, 1);
+        return userRepository.findByBirthdayBefore2(localdate);
+    }
+
+    @Override
+    public List<User> finbyAgeMoreThan3(String age) {
+        if (age == null || age.isEmpty() || Integer.parseInt(age) < 0) {
+            throw new BusinessException("Age is invalid");
+        }
+        LocalDate localdate = LocalDate.of(LocalDate.now().minusYears(Integer.parseInt(age)).getYear(), 1, 1);
+        return userRepository.findByBirthdayBefore3(localdate);
+    }
+
 
     @Override
     public List<User> searchUser(UserFilter userFilter) {

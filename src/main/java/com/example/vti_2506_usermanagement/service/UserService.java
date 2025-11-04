@@ -3,13 +3,21 @@ package com.example.vti_2506_usermanagement.service;
 import com.example.vti_2506_usermanagement.dto.UserDTO;
 import com.example.vti_2506_usermanagement.dto.UserFilter;
 import com.example.vti_2506_usermanagement.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface UserService {
-    List<User> getAllUsers();
+    Page<User> getAllUsers(Pageable pageable);
+
     User createUser(UserDTO userDTO);
     User updateUser(Long id, UserDTO userDTO);
     List<User> searchUser(UserFilter userFilter);
     void deleteUser(Long id);
+    List<User> findbyAgeMoreThan(String age);
+    List<User> finbyAgeMoreThan2(String age);
+    List<User> finbyAgeMoreThan3(String age);
+
+
 }

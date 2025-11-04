@@ -10,6 +10,5 @@ import java.util.List;
 
 @Repository
 public interface GroupRepository extends JpaRepository<Group, Long>, JpaSpecificationExecutor<Group> {
-    List<Group> getGroupByGroupName(GroupFilter groupFilter);
     Group deleteGroupById(Long id);
 }

@@ -80,7 +80,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public List<Group> getGroupByGroupName(GroupFilter groupFilter) {
+    public List<Group> searchGroup(GroupFilter groupFilter) {
         Specification<Group> specification = getSpecification(groupFilter);
         return groupRepository.findAll(specification);
     }
