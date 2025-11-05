@@ -13,7 +13,7 @@ public interface UserService {
 
     User createUser(UserDTO userDTO);
     User updateUser(Long id, UserDTO userDTO);
-    List<User> searchUser(UserFilter userFilter);
+    Page<User> searchUser(UserFilter userFilter, Pageable pageable);
     void deleteUser(Long id);
     List<User> findbyAgeMoreThan(String age);
     List<User> finbyAgeMoreThan2(String age);

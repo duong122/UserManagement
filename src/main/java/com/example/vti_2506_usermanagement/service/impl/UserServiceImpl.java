@@ -93,9 +93,9 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public List<User> searchUser(UserFilter userFilter) {
+    public Page<User> searchUser(UserFilter userFilter, Pageable pageable) {
         Specification<User> specification = buildSpecification(userFilter);
-        return userRepository.findAll(specification);
+        return userRepository.findAll(specification, pageable);
     }
 
     public Specification<User> buildSpecification(UserFilter userFilter) {

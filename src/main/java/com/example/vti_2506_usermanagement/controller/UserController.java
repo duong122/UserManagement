@@ -35,8 +35,8 @@ public class UserController {
     }
 
     @GetMapping("/search")
-    public List<User> searchUser(UserFilter userFilter) {
-        return userService.searchUser(userFilter);
+    public Page<User> searchUser(UserFilter userFilter, Pageable pageable) {
+        return userService.searchUser(userFilter, pageable);
     }
 
     @DeleteMapping("{id}")
