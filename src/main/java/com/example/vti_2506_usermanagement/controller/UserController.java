@@ -1,5 +1,6 @@
 package com.example.vti_2506_usermanagement.controller;
 
+import com.example.vti_2506_usermanagement.common.BaseResponse;
 import com.example.vti_2506_usermanagement.dto.UserDTO;
 import com.example.vti_2506_usermanagement.dto.UserFilter;
 import com.example.vti_2506_usermanagement.entity.User;
@@ -8,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,23 +22,23 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("")
-    public Page<User> getAllUsers(Pageable pageable) {
-        return userService.getAllUsers(pageable);
+    public ResponseEntity<BaseResponse<Page<User> >> getAllUsers(Pageable pageable) {
+        return ResponseEntity.ok(new BaseResponse<>(userService.getAllUsers(pageable), "Get all users successfully"));
     }
 
     @PostMapping("")
-    public User createUser(@Valid @RequestBody UserDTO userDTO) {
-        return userService.createUser(userDTO);
+    public ResponseEntity<BaseResponse<User>> createUser(@Valid @RequestBody UserDTO userDTO) {
+        return ResponseEntity.ok(new BaseResponse<>(userService.createUser(userDTO), "Create user successfully"));
     }
 
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable Long id ,@Valid @RequestBody UserDTO userDTO) {
-        return userService.updateUser(id, userDTO);
+    public ResponseEntity<BaseResponse<User>> updateUser(@PathVariable Long id ,@Valid @RequestBody UserDTO userDTO) {
+        return ResponseEntity.ok(new BaseResponse<>(userService.updateUser(id, userDTO), "Update user successfully"));
     }
 
     @GetMapping("/search")
-    public Page<User> searchUser(UserFilter userFilter, Pageable pageable) {
-        return userService.searchUser(userFilter, pageable);
+    public ResponseEntity<BaseResponse<Page<User>>> searchUser(UserFilter userFilter, Pageable pageable) {
+        return ResponseEntity.ok(new BaseResponse<>(userService.searchUser(userFilter, pageable), "Get users successfully"));
     }
 
     @DeleteMapping("{id}")

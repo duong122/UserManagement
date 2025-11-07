@@ -9,6 +9,8 @@ import com.example.vti_2506_usermanagement.service.GroupService;
 import com.example.vti_2506_usermanagement.specification.GroupSpecification;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -23,25 +25,21 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GroupServiceImpl implements GroupService {
     private final GroupRepository groupRepository;
+    private final ModelMapper modelMapper;
 
     @Override
     public Page<Group> getAllGroups(Pageable pageable) {
         return groupRepository.findAll(pageable);
     }
 
-
+    @Transactional
     @Override
     public Group createGroup(GroupDTO groupDto) {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate date = LocalDate.parse(groupDto.getEstablishDay(), dateTimeFormatter);
-        Group group = new  Group();
-        group.setGroupName(groupDto.getGroupName());
-        group.setGroupPolicy(groupDto.getGroupPolicy());
-        group.setEstablishDay(LocalDate.parse(groupDto.getEstablishDay(), dateTimeFormatter));;
-
+        Group group = modelMapper.map(groupDto, Group.class);
         return groupRepository.save(group);
     }
 
+    @Transactional
     @Override
     public Group updateGroup(Long id, GroupDTO groupDto) {
         if (id == null || id <= 0) {
@@ -50,12 +48,11 @@ public class GroupServiceImpl implements GroupService {
         if (groupRepository.findById(id).isEmpty()) {
             throw new BusinessException("Group not exists");
         }
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate date = LocalDate.parse(groupDto.getEstablishDay(), dateTimeFormatter);
         Group group = groupRepository.findById(id).get();
         group.setGroupName(groupDto.getGroupName());
         group.setGroupPolicy(groupDto.getGroupPolicy());
-        group.setEstablishDay(LocalDate.parse(groupDto.getEstablishDay(), dateTimeFormatter));
+        group.setEstablishDay(groupDto.getEstablishDay());
+
 
         return groupRepository.save(group);
     }
@@ -100,13 +97,9 @@ public class GroupServiceImpl implements GroupService {
             specification = specification.and(GroupSpecification.hasGroupPolicy(groupFilter.getGroupPolicy()));
         }
         if (groupFilter.getEstablishDay() != null) {
-            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate date = LocalDate.parse(groupFilter.getEstablishDay(), dateTimeFormatter);
-            specification = specification.and(GroupSpecification.hasEstablishDay(date));
+            specification = specification.and(GroupSpecification.hasEstablishDay(groupFilter.getEstablishDay()));
         }
 
         return specification;
-
     }
-
 }

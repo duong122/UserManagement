@@ -10,7 +10,6 @@ import java.util.List;
 
 public interface UserService {
     Page<User> getAllUsers(Pageable pageable);
-
     User createUser(UserDTO userDTO);
     User updateUser(Long id, UserDTO userDTO);
     Page<User> searchUser(UserFilter userFilter, Pageable pageable);

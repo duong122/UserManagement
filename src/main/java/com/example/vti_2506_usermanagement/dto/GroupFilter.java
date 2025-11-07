@@ -10,5 +10,5 @@ import java.time.LocalDate;
 public class GroupFilter {
     private String groupName;
     private String groupPolicy;
-    private String establishDay;
+    private LocalDate establishDay;
 }

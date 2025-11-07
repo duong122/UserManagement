@@ -7,7 +7,10 @@ import com.example.vti_2506_usermanagement.exception.BusinessException;
 import com.example.vti_2506_usermanagement.repository.UserRepository;
 import com.example.vti_2506_usermanagement.service.UserService;
 import com.example.vti_2506_usermanagement.specification.UserSpecification;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -20,25 +23,22 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-
     private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
 
     @Override
     public Page<User> getAllUsers(Pageable pageable) {
         return userRepository.findAll(pageable);
     }
 
+    @Transactional
     @Override
     public User createUser(UserDTO userDTO) {
-        User user = new User();
-        user.setFirstName(userDTO.getFirstName());
-        user.setLastName(userDTO.getLastName());
-        user.setBirthday(LocalDate.parse(userDTO.getBirthday()));
-        user.setAddress(userDTO.getAddress());
-
+        User user = modelMapper.map(userDTO, User.class);
         return userRepository.save(user);
     }
 
+    @Transactional
     @Override
     public User updateUser(Long id, UserDTO userDTO) {
         if(!userRepository.existsById(id)){
@@ -47,12 +47,13 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id).get();
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
-        user.setBirthday(LocalDate.parse(userDTO.getBirthday()));
+        user.setBirthday(userDTO.getBirthday());
         user.setAddress(userDTO.getAddress());
 
         return userRepository.save(user);
     }
 
+    @Transactional
     @Override
     public void deleteUser(Long id) {
         if (id == null || id <= 0) {

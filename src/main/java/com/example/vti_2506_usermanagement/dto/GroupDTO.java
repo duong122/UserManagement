@@ -1,10 +1,10 @@
 package com.example.vti_2506_usermanagement.dto;
 
 import jakarta.persistence.Column;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Range;
 
 import java.time.LocalDate;
 
@@ -12,7 +12,8 @@ import java.time.LocalDate;
 @Setter
 public class GroupDTO {
     @NotNull(message = "Group name không được để trống")
-    @Size(min=1, max=255, message="Group name phải có độ dài từ 1 - 255 ký tự")
+    @Min(value = 1)
+    @Max(value = 255)
     private String groupName;
 
     @NotNull
@@ -20,5 +21,6 @@ public class GroupDTO {
     private String groupPolicy;
 
     @NotNull
-    private String establishDay;
+    @PastOrPresent
+    private LocalDate establishDay;
 }
