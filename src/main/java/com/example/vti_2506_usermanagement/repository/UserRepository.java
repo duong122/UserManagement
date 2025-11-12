@@ -23,4 +23,6 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 
     @Query(value = "SELECT * FROM users u WHERE u.birth_day < :birthDayParam", nativeQuery = true)
     List<User> findByBirthdayBefore3(@Param("birthDayParam") LocalDate birthDayBefore);
+
+    User getUserByUsername(String username);
 }

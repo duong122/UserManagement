@@ -9,10 +9,11 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface GroupService {
-    public Page<Group> getAllGroups(Pageable pageable);
-    public Group createGroup(GroupDTO groupDto);
-    public Group updateGroup(Long id, GroupDTO groupDto);
-    public Group deleteGroup(Long id);
-    public Group getGroupById(Long id);
-    public Page<Group> searchGroup(GroupFilter groupFilter, Pageable pageable);
+    Page<Group> getAllGroups(Pageable pageable);
+    Group createGroup(GroupDTO groupDto);
+    Group updateGroup(Long id, GroupDTO groupDto);
+    Group deleteGroup(Long id);
+    Group getGroupById(Long id);
+    Page<Group> searchGroup(GroupFilter groupFilter, Pageable pageable);
+    Page<Group> getGroupsByUserId(Long id, Pageable pageable);
 }

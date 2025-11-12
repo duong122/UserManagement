@@ -14,10 +14,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -56,9 +61,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void deleteUser(Long id) {
-        if (id == null || id <= 0) {
-            throw new BusinessException("User id is invalid");
-        }
         if (!userRepository.existsById(id)) {
             throw new BusinessException("User with id " + id + " not exists");
         }
@@ -111,5 +113,17 @@ public class UserServiceImpl implements UserService {
             specification = specification.and(UserSpecification.hasAddress(userFilter.getAddress()));
         }
         return specification;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        if(username == null || username.isBlank()) {
+            throw new BusinessException("Username không được để trống");
+        }
+        User user = userRepository.getUserByUsername(username);
+        if(user == null) {
+            throw new UsernameNotFoundException("Không tìm thấy user ");
+        }
+        return new org.springframework.security.core.userdetails.User(username, user.getPassword(), Collections.emptyList());
     }
 }

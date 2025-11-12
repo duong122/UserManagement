@@ -11,12 +11,11 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class GroupDTO {
-    @NotNull(message = "Group name không được để trống")
-    @Min(value = 1)
-    @Max(value = 255)
+    @NotBlank(message = "Group name không được để trống")
+    @Size(min=1, max=255, message = "Group name có độ dài từ 1-255 ký tự")
     private String groupName;
 
-    @NotNull
+    @NotBlank(message = "Group Policy không được để trống")
     @Size(min=1, message="Group policy không được để trống")
     private String groupPolicy;
 

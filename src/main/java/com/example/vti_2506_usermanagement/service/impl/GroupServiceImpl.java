@@ -42,9 +42,6 @@ public class GroupServiceImpl implements GroupService {
     @Transactional
     @Override
     public Group updateGroup(Long id, GroupDTO groupDto) {
-        if (id == null || id <= 0) {
-            throw new BusinessException("Id can not be null or smaller than zero");
-        }
         if (groupRepository.findById(id).isEmpty()) {
             throw new BusinessException("Group not exists");
         }
@@ -60,9 +57,6 @@ public class GroupServiceImpl implements GroupService {
     @Transactional
     @Override
     public Group deleteGroup(Long id) {
-        if (id == null || id <= 0) {
-            throw new BusinessException("Id can not be null or smaller than zero");
-        }
         if (groupRepository.findById(id).isEmpty()) {
             throw new BusinessException("Group not exists");
         }
@@ -71,9 +65,6 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public Group getGroupById(Long id) {
-        if (id == null || id <= 0) {
-            throw new BusinessException("Id can not be null or smaller than zero");
-        }
         if (groupRepository.findById(id).isEmpty()) {
             throw new BusinessException("Group not exists");
         }
@@ -84,6 +75,11 @@ public class GroupServiceImpl implements GroupService {
     public Page<Group> searchGroup(GroupFilter groupFilter, Pageable pageable) {
         Specification<Group> specification = getSpecification(groupFilter);
         return groupRepository.findAll(specification, pageable);
+    }
+
+    @Override
+    public Page<Group> getGroupsByUserId(Long id, Pageable pageable) {
+        return groupRepository.getGroupsByUserId(id, pageable);
     }
 
     public Specification<Group> getSpecification(GroupFilter groupFilter) {

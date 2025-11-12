@@ -5,10 +5,12 @@ import com.example.vti_2506_usermanagement.dto.UserFilter;
 import com.example.vti_2506_usermanagement.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
-public interface UserService {
+public interface UserService extends UserDetailsService {
     Page<User> getAllUsers(Pageable pageable);
     User createUser(UserDTO userDTO);
     User updateUser(Long id, UserDTO userDTO);

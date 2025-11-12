@@ -6,10 +6,12 @@ import com.example.vti_2506_usermanagement.dto.UserFilter;
 import com.example.vti_2506_usermanagement.entity.User;
 import com.example.vti_2506_usermanagement.service.UserService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,32 +19,37 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
+@Validated
 public class UserController {
 
     private final UserService userService;
 
     @GetMapping("")
     public ResponseEntity<BaseResponse<Page<User> >> getAllUsers(Pageable pageable) {
-        return ResponseEntity.ok(new BaseResponse<>(userService.getAllUsers(pageable), "Get all users successfully"));
+        return ResponseEntity.ok(new BaseResponse<>(userService.getAllUsers(pageable), "Get all users successfully", null));
     }
 
     @PostMapping("")
     public ResponseEntity<BaseResponse<User>> createUser(@Valid @RequestBody UserDTO userDTO) {
-        return ResponseEntity.ok(new BaseResponse<>(userService.createUser(userDTO), "Create user successfully"));
+        return ResponseEntity.ok(new BaseResponse<>(userService.createUser(userDTO), "Create user successfully", null));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BaseResponse<User>> updateUser(@PathVariable Long id ,@Valid @RequestBody UserDTO userDTO) {
-        return ResponseEntity.ok(new BaseResponse<>(userService.updateUser(id, userDTO), "Update user successfully"));
+    public ResponseEntity<BaseResponse<User>> updateUser(
+            @PathVariable @Min(value = 1, message = "User id không thể nhỏ hơn 1")  Long id ,
+            @Valid @RequestBody UserDTO userDTO) {
+        return ResponseEntity.ok(new BaseResponse<>(userService.updateUser(id, userDTO), "Update user successfully", null));
     }
 
     @GetMapping("/search")
     public ResponseEntity<BaseResponse<Page<User>>> searchUser(UserFilter userFilter, Pageable pageable) {
-        return ResponseEntity.ok(new BaseResponse<>(userService.searchUser(userFilter, pageable), "Get users successfully"));
+        return ResponseEntity.ok(new BaseResponse<>(userService.searchUser(userFilter, pageable), "Get users successfully", null));
     }
 
     @DeleteMapping("{id}")
-    public void deleteUser(@PathVariable Long id) {
+    public void deleteUser(
+            @PathVariable @Min(value = 1, message = "User id không thể nhỏ hơn 1") Long id
+    ) {
         userService.deleteUser(id);
     }
 
