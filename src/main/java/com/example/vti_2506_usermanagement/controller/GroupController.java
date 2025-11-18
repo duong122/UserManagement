@@ -8,6 +8,7 @@ import com.example.vti_2506_usermanagement.entity.User;
 import com.example.vti_2506_usermanagement.service.GroupService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -67,5 +68,6 @@ public class GroupController {
     ) {
         return ResponseEntity.ok(new BaseResponse<>(groupService.getGroupsByUserId(id, pageable), "Get groups of user successfully", null));
     }
+
 
 }

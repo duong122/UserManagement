@@ -1,5 +1,6 @@
 package com.example.vti_2506_usermanagement.service.impl;
 
+import com.example.vti_2506_usermanagement.dto.UpdateUserDTO;
 import com.example.vti_2506_usermanagement.dto.UserDTO;
 import com.example.vti_2506_usermanagement.dto.UserFilter;
 import com.example.vti_2506_usermanagement.entity.User;
@@ -14,15 +15,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -39,22 +44,26 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public User createUser(UserDTO userDTO) {
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         User user = modelMapper.map(userDTO, User.class);
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         return userRepository.save(user);
     }
 
     @Transactional
     @Override
-    public User updateUser(Long id, UserDTO userDTO) {
+    public User updateUser(Long id, UpdateUserDTO userDTO) {
         if(!userRepository.existsById(id)){
             throw new BusinessException("User with id " + id + " not exists");
         }
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         User user = userRepository.findById(id).get();
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
         user.setBirthday(userDTO.getBirthday());
         user.setAddress(userDTO.getAddress());
-
+        user.setRoleName(userDTO.getRoleName());
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         return userRepository.save(user);
     }
 
@@ -94,7 +103,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByBirthdayBefore3(localdate);
     }
 
-
     @Override
     public Page<User> searchUser(UserFilter userFilter, Pageable pageable) {
         Specification<User> specification = buildSpecification(userFilter);
@@ -112,6 +120,9 @@ public class UserServiceImpl implements UserService {
         if (userFilter.getAddress() != null && !userFilter.getAddress().isBlank()) {
             specification = specification.and(UserSpecification.hasAddress(userFilter.getAddress()));
         }
+        if (userFilter.getRoleName() != null && !userFilter.getRoleName().isBlank()) {
+            specification = specification.and(UserSpecification.hasRoleName(userFilter.getRoleName()));
+        }
         return specification;
     }
 
@@ -124,6 +135,8 @@ public class UserServiceImpl implements UserService {
         if(user == null) {
             throw new UsernameNotFoundException("Không tìm thấy user ");
         }
-        return new org.springframework.security.core.userdetails.User(username, user.getPassword(), Collections.emptyList());
+        List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
+        authorityList.add(new SimpleGrantedAuthority("ROLE_" + userRepository.getRoleByUsername(username).toUpperCase()));
+        return new org.springframework.security.core.userdetails.User(username, user.getPassword(), List.of(new SimpleGrantedAuthority("ROLE_" + userRepository.getRoleByUsername(username).toUpperCase())));
     }
 }

@@ -82,6 +82,7 @@ public class GroupServiceImpl implements GroupService {
         return groupRepository.getGroupsByUserId(id, pageable);
     }
 
+
     public Specification<Group> getSpecification(GroupFilter groupFilter) {
         Specification<Group> specification = Specification.where(null);
 

@@ -1,6 +1,7 @@
 package com.example.vti_2506_usermanagement.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,4 +30,7 @@ public class User {
     private String username;
 
     private String password;
+
+    @Column(name = "role_name")
+    private String roleName;
 }

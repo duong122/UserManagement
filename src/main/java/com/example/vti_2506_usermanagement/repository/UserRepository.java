@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
 @Repository
@@ -25,4 +26,9 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     List<User> findByBirthdayBefore3(@Param("birthDayParam") LocalDate birthDayBefore);
 
     User getUserByUsername(String username);
+
+    List<User> getUsersByIdIsIn(Collection<Integer> ids);
+
+    @Query("select u.roleName from User u where u.username = :username")
+    String getRoleByUsername(String username);
 }

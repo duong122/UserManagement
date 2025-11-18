@@ -14,6 +14,6 @@ public class RequestAlterUserInGroupDTO {
     @Min(value = 1, message = "")
     private Integer groupId;
 
-
+    @NotNull
     private List<Integer> userIds;
 }

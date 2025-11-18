@@ -17,4 +17,6 @@ public interface GroupRepository extends JpaRepository<Group, Long>, JpaSpecific
 
     @Query(value = "select g.* from `groups` g join user_group_mapping ugm on g.id = ugm.group_id where ugm.user_id =:id;", nativeQuery = true)
     Page<Group> getGroupsByUserId(Long id, Pageable pageable);
+
+    Group getGroupById(Integer groupId);
 }

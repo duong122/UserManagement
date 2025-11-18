@@ -1,36 +1,32 @@
 package com.example.vti_2506_usermanagement.controller;
 
 import com.example.vti_2506_usermanagement.common.BaseResponse;
-import com.example.vti_2506_usermanagement.dto.UserGroupMappingDTO;
+import com.example.vti_2506_usermanagement.dto.RequestAlterUserInGroupDTO;
 import com.example.vti_2506_usermanagement.service.UserGroupMappingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/ugm")
 @Validated
-@RequestMapping("/userGroupMapping")
 public class UserGroupMappingController {
     private final UserGroupMappingService userGroupMappingService;
 
-    @PostMapping
-    public ResponseEntity<BaseResponse<Void>> addUsersToGroup(@RequestBody @Valid List<UserGroupMappingDTO> userGroupMappingDTOList) {
-        return ResponseEntity.ok(new BaseResponse<>(userGroupMappingService.addUserToGroup(userGroupMappingDTOList),
-                                "Add users to the group successfully", null));
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/alter")
+    public ResponseEntity<BaseResponse<Object>> alterUsersInGroup(
+            @Valid @RequestBody RequestAlterUserInGroupDTO dto
+    ) {
+        userGroupMappingService.alterUsersInGroup(dto);
+        return ResponseEntity.ok().body(new BaseResponse<>(null,
+                                "Add users to group successfully", null));
     }
-
 }
-
-
-
-
-
-

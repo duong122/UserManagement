@@ -16,7 +16,12 @@ public class UserSpecification {
 
     public static Specification<User> hasAddress(String address) {
         return (root, query, builder)
-                -> builder.like(builder.lower(root.get("address")), "%" + address.toLowerCase() + "%");
+                    -> builder.like(builder.lower(root.get("address")), "%" + address.toLowerCase() + "%");
+    }
+
+    public static Specification<User> hasRoleName(String roleName) {
+        return (root, query, citeriabuilder)
+                    -> citeriabuilder.like(citeriabuilder.lower(root.get("roleName")), "%" + roleName.toLowerCase() + "%");
     }
 
 }
